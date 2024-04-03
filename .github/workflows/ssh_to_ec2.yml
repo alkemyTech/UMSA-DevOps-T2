@@ -1,0 +1,31 @@
+name: SSH into EC2 Instance
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ssh:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.PEM_FILE }}
+
+    - name: SSH into EC2 Instance
+      uses: appleboy/ssh-action@master
+      with:
+        host: 34.203.206.106  # Coloca aquí tu dirección IP pública
+        username: ec2-user     # Nombre de usuario para conectarse a la instancia EC2
+        key: ${{ secrets.PEM_FILE }}
+        script: |
+          # Aquí puedes ejecutar comandos en tu instancia EC2
+          echo "Conectado a la instancia EC2"
+          # Por ejemplo, puedes ejecutar comandos como:
+          # sudo yum update -y
+          # o cualquier otro comando que necesites ejecutar
